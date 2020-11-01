@@ -9,6 +9,7 @@ import csv
 import pandas as pd
 import json
 import pymysql.cursors
+import re
 
 
 
@@ -103,7 +104,25 @@ def get_list(url_param):
 
                     for d in data:
                         if k in range(len(datat)):
-                            temp[data[j]] = datat[k]
+
+                            if '[' in datat[k] and ']' in datat[k]:
+                                temp_data = datat[k]
+                                temp_val = datat[k].split('[')
+                                if len(temp_val) >= 2:
+                                    temp_tr  = tr.find('a', text='[' + temp_val[1])
+                                    if temp_tr:
+
+                                        temp_url = url + temp_tr['href']
+
+
+                                        temp_data = str('<a href="' +  temp_url + '">' + temp_val[0] + '</a>')
+
+
+                                temp[data[j]] = temp_data
+
+
+                            else:
+                                temp[data[j]] = datat[k]
                         else:
                             temp[data[j]] = ''
                         j=j+1
